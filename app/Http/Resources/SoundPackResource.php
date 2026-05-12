@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\SoundPack;
+use App\Services\SoundPack\Image;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -24,10 +25,12 @@ class SoundPackResource
 		return [
 			'id'    => $this->id,
 			'title' => $this->title,
-			'count' => $this->allMedia()
-			                ->map(fn (?EloquentCollection $item) => $item?->count() ?? 0)
-			                ->sum(),
-			'image' => Storage::url('images/' . $this->id)
+			'media' => [
+				'tracks' => TrackResource::collection($this->tracks),
+				'ambient' => $this->ambient,
+				'one_shots' => $this->one_shots,
+			],
+			'image' => Storage::url(Image::getPath($this->id))
 		];
 	}
 }

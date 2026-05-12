@@ -10,16 +10,8 @@ class RouteServiceProvider
 {
 	public function map(): void
 	{
-		$this->mapStorageRoutes();
 		$this->mapWebRoutes();
 		$this->mapApiRoutes();
-	}
-
-	protected function mapStorageRoutes(): void
-	{
-		// Storage маршруты без middleware set.guard
-		Route::middleware(['web']) // Только web, без set.guard
-		     ->group(base_path('routes/storage.php'));
 	}
 
 	protected function mapWebRoutes(): void

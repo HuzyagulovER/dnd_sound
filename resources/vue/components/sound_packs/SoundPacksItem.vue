@@ -1,15 +1,15 @@
 <template>
-  <RouterLink :to="{name:'SoundPack', params: {id: props.id}}" class="sound_pack-item">
-    <div class="sound_pack-item__image image">
+  <RouterLink :to="{name:'SoundPack', params: {id: props.id}}" class="sound-pack-item">
+    <div class="sound-pack-item__image image">
       <div class="image__element"
            :style="{backgroundImage: 'url('+image+')'}"
       ></div>
     </div>
-    <div class="sound_pack-item__info">
-      <p class="sound_pack-item__title">
+    <div class="sound-pack-item__info">
+      <p class="sound-pack-item__title">
         {{ title }}
       </p>
-      <p class="sound_pack-item__count">
+      <p class="sound-pack-item__count">
         {{ trackPluralize(count) }}
       </p>
     </div>
@@ -35,7 +35,7 @@ const title = computed(() => {
 <style scoped lang="scss">
 @import "@scss/variables";
 
-.sound_pack-item {
+.sound-pack-item {
   display: flex;
   flex-direction: column;
   width: 14rem;

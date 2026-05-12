@@ -28,12 +28,18 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+@import "@scss/variables";
+
 .header {
   display: flex;
   align-items: center;
+  margin-bottom: 2rem;
 
   &__title {
     margin-right: auto;
+    color: $--c__white;
+    font-weight: 600;
+    font-size: 3rem;
   }
 }
 </style>

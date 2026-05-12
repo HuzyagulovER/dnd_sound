@@ -10,6 +10,7 @@
 html, body, #app {
   min-height: 100vh;
   font-family: InterDisplay, sans-serif;
+  overflow-x: hidden;
 }
 
 #app {
@@ -18,11 +19,9 @@ html, body, #app {
   padding: 5rem 7rem;
 }
 
-.header {
-  margin-bottom: 2rem ;
-  &__title {
-    color: $--c__white;
-    font-weight: 600;
-    font-size: 3rem;
-  }
+.subtitle {
+  margin-bottom: 1rem;
+  color: $--c__white;
+  font-weight: 600;
+  font-size: 2rem;
 }

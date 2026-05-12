@@ -23,11 +23,13 @@ import TheLoader from "@components/common/components/TheLoader.vue";
 .main {
   display: flex;
   flex-grow: 1;
+  width: 100%;
 
   &__container {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    width: 100%;
   }
 }
 

@@ -1,11 +1,11 @@
 <template>
-  <section class="sound_packs">
-    <div class="sound_packs__container main-container">
+  <section class="sound-packs">
+    <div class="sound-packs__container">
       <TheHeader>
         <ButtonCreate text="Создать плейлист" :to="{name: 'SoundPackCreate'}" />
       </TheHeader>
-      <div class="sound_packs__list">
-        <div class="sound_packs__item" v-for="(sound_pack) in sound_packs" :key='sound_pack.id'>
+      <div class="sound-packs__list">
+        <div class="sound-packs__item" v-for="(sound_pack) in sound_packs" :key='sound_pack.id'>
           <SoundPackItem :id="sound_pack.id"
                          :title="sound_pack.title"
                          :image="sound_pack.image"
@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import TheHeader from "@components/common/TheHeader.vue";
-import SoundPackItem from "./SoundPackItem.vue";
+import SoundPackItem from "./SoundPacksItem.vue";
 import ButtonCreate from "@components/common/components/ButtonCreate.vue";
 import {soundPackStore} from "@stores/sound_pack";
 import {storeToRefs} from "pinia";
@@ -38,7 +38,7 @@ storeSoundPack.getSoundPacks()
 <style scoped lang="scss">
 @import "@scss/variables";
 
-.sound_packs {
+.sound-packs {
   &__list {
     display: grid;
     grid-template: auto / repeat(auto-fill, minmax(250px, 1fr));
