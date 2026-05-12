@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "moduleResolution": "Node",
+    "target": "esnext",
+    "jsx": "preserve",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "paths": {
+      "@/*": ["resources/*"],
+      "@scss/*": ["resources/scss/*"],
+      "@stores/*": ["resources/vue/stores/*"],
+      "@components/*": ["resources/vue/components/*"],
+    }
+  },
+  "exclude": ["node_modules", "public"],
+  "include": [
+    "resources/js/**/*.ts",
+    "resources/js/**/*.d.ts",
+    "resources/js/**/*.vue",
+    "resources/vue/**/*.vue",
+    "resources/vue/**/*.ts",
+    "resources/js/app.ts"
+  ]
+}

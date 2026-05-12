@@ -1,0 +1,28 @@
+@import "variables";
+@import "fonts";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  min-height: 100vh;
+  font-family: InterDisplay, sans-serif;
+}
+
+#app {
+  display: flex;
+  background-color: $--c__background;
+  padding: 5rem 7rem;
+}
+
+.header {
+  margin-bottom: 2rem ;
+  &__title {
+    color: $--c__white;
+    font-weight: 600;
+    font-size: 3rem;
+  }
+}
