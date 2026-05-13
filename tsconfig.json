@@ -13,10 +13,10 @@
     "noEmit": true,
     "isolatedModules": true,
     "paths": {
-      "@/*": ["resources/*"],
-      "@scss/*": ["resources/scss/*"],
-      "@stores/*": ["resources/vue/stores/*"],
-      "@components/*": ["resources/vue/components/*"],
+      "@/*": ["./resources/*"],
+      "@scss/*": ["./resources/scss/*"],
+      "@stores/*": ["./resources/vue/stores/*"],
+      "@components/*": ["./resources/vue/components/*"],
     }
   },
   "exclude": ["node_modules", "public"],

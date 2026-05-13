@@ -2,18 +2,30 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Ambient;
+use App\Services\Ambient\Media;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class AmbientResource extends JsonResource
+/**
+ * @mixin Ambient
+ */
+class AmbientResource
+	extends AbstractMediaResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request): array
-    {
-        return parent::toArray($request);
-    }
+	public const MEDIA_CLASS = Media::class;
+
+	/**
+	 * Transform the resource into an array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function toArray(Request $request): array
+	{
+		return [
+			'id'          => $this->id,
+			'title'       => $this->title,
+			'description' => $this->description,
+			'file'        => $this->getFileString($this->id),
+		];
+	}
 }

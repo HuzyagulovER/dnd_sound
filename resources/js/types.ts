@@ -4,9 +4,9 @@ export type SoundPackType = {
     image: string,
     count: number,
     media: {
-        tracks: TrackType,
-        ambient: AmbientType,
-        one_shots: OneShotType,
+        tracks: Array<TrackType>,
+        ambient: Array<AmbientType>,
+        one_shots: Array<OneShotType>,
     },
 };
 
@@ -34,10 +34,12 @@ export type OneShotType = {
 export type SoundPacksType = Record<string, SoundPackType>;
 
 export type SoundPackState = {
-    sound_packs: SoundPacksType
-    sound_pack: SoundPackType | {}
+    sound_packs: SoundPacksType,
+    sound_pack: SoundPackType | {},
+    stopSignal: boolean,
+    currentTrackId: string,
 };
 
 export type MainState = {
-    loader: boolean
+    loader: boolean,
 };

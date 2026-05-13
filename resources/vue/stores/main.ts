@@ -15,5 +15,9 @@ export const mainStore = defineStore('mainStore', {
         toggleLoader() {
             this.loader = !this.loader;
         },
+        setTitle(title: string) {
+            const titleElement = <HTMLElement>document.querySelector('head title');
+            titleElement.innerText = title;
+        },
     },
 })

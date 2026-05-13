@@ -8,6 +8,7 @@
 <script setup lang="ts">
 import {computed, watch} from "vue";
 import {useRoute} from "vue-router";
+import {mainStore} from "@stores/main";
 
 const props = defineProps<{
   title?: string;
@@ -17,12 +18,14 @@ const route = useRoute();
 const title = computed(() => {
   return props.title ?? route.meta?.title;
 })
-const titleElement = <HTMLElement>document.querySelector('head title');
+
+const storeMain = mainStore();
+storeMain.setTitle(title.value);
 
 watch(
     title,
     () => {
-      titleElement.innerText = title.value;
+      storeMain.setTitle(title.value);
     }
 )
 </script>

@@ -37,4 +37,15 @@ class TrackFactory
 			}
 		);
 	}
+
+	public function forSoundPack(string $id): TrackFactory
+	{
+		return $this->state(
+			function () use ($id) {
+				return [
+					'sound_pack_id' => $id,
+				];
+			}
+		);
+	}
 }

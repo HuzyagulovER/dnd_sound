@@ -26,11 +26,11 @@ class SoundPackResource
 			'id'    => $this->id,
 			'title' => $this->title,
 			'media' => [
-				'tracks' => TrackResource::collection($this->tracks),
-				'ambient' => $this->ambient,
-				'one_shots' => $this->one_shots,
+				'tracks'    => TrackResource::collection($this->tracks),
+				'ambient'   => AmbientResource::collection($this->ambient),
+				'one_shots' => OneShotResource::collection($this->one_shots),
 			],
-			'image' => Storage::url(Image::getPath($this->id))
+			'image' => Storage::url(Image::getPath($this->id)),
 		];
 	}
 }

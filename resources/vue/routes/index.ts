@@ -2,9 +2,6 @@ import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router';
 import SoundPacks from "@components/sound_packs/SoundPacks.vue";
 import SoundPack from "@components/sound_pack/SoundPack.vue";
 import SoundPackCreate from "@components/sound_packs/SoundPackCreate.vue";
-import {watch} from "vue";
-
-const defaultTitle: string = 'Мои плейлисты'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -44,8 +41,8 @@ router.beforeEach(async (to) => {
         //         next()
         //     }
         // }
-        const titleElement = <HTMLElement>document.querySelector('head title');
-        titleElement.innerText = to.meta?.title as string;
+        // const titleElement = <HTMLElement>document.querySelector('head title');
+        // titleElement.innerText = to.meta?.title as string;
 
         if (to.path === '/sign-in') {
             return '/';

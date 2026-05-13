@@ -8,23 +8,29 @@
           <p class="sound-pack__subtitle subtitle">Tracks</p>
           <div class="sound-pack__row-container">
             <TrackItem v-for="(track) in sound_pack.media?.tracks"
-                       :src="(track as TrackType).file"
+                       :id="(track as TrackType).id"
+                       :src="(track as TrackType).file ?? ''"
+                       :title="(track as TrackType).title"
             />
           </div>
         </div>
         <div class="sound-pack__row">
           <p class="sound-pack__subtitle subtitle">Ambient</p>
           <div class="sound-pack__row-container">
-            <TrackItem v-for="(ambient) in sound_pack.media?.ambient"
-                       :src="(ambient as AmbientType).file"
+            <AmbientItem v-for="(ambient) in sound_pack.media?.ambient"
+                         :id="(ambient as TrackType).id"
+                         :src="(ambient as AmbientType).file ?? ''"
+                         :title="(ambient as AmbientType).title"
             />
           </div>
         </div>
         <div class="sound-pack__row">
           <p class="sound-pack__subtitle subtitle">One shots</p>
           <div class="sound-pack__row-container">
-            <TrackItem v-for="(one_shot) in sound_pack.media?.one_shots"
-                       :src="(one_shot as OneShotType).file"
+            <OneShotItem v-for="(one_shot) in sound_pack.media?.one_shots"
+                         :id="(one_shot as TrackType).id"
+                         :src="(one_shot as OneShotType).file ?? ''"
+                         :title="(one_shot as OneShotType).title"
             />
           </div>
         </div>
@@ -35,12 +41,14 @@
 
 <script setup lang="ts">
 import TheHeader from "@components/common/TheHeader.vue";
+import TrackItem from "@components/sound_pack/TrackItem.vue";
+import OneShotItem from "@components/sound_pack/OneShotItem.vue";
+import AmbientItem from "@components/sound_pack/AmbientItem.vue";
 import {storeToRefs} from "pinia";
 import {soundPackStore} from "@stores/sound_pack";
 import {useRoute} from "vue-router";
 import {mainStore} from "@stores/main";
 import {onMounted} from "vue";
-import TrackItem from "@components/sound_pack/TrackItem.vue";
 import {AmbientType, OneShotType, SoundPackType, TrackType} from "@/js/types";
 
 const route = useRoute();
@@ -73,8 +81,10 @@ onMounted(async () => {
     }
 
     &-container {
-      display: flex;
+      display: grid;
       gap: 2rem;
+      grid-template-columns: repeat(auto-fill, 14rem);
+      grid-auto-flow: column;
     }
   }
 }
