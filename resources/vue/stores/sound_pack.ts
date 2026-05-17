@@ -29,6 +29,8 @@ export const soundPackStore = defineStore('soundPackStore', {
         sound_pack: {},
         stopSignal: false,
         currentTrackId: '',
+        currentTrackTime: 0,
+        currentAmbientIds: [],
     }),
     actions: {
         async getSoundPacks(): Promise<SoundPacksType> {
@@ -52,18 +54,38 @@ export const soundPackStore = defineStore('soundPackStore', {
             )
         },
 
-        async stopAllTracks(): Promise<boolean> {
+        async stopCurrentTrack(): Promise<void> {
             return new Promise((res): void => {
                 this.stopSignal = true;
                 setTimeout(() => this.stopSignal = false);
 
                 return res(this.stopSignal);
+            }).then((): void => {
+                this.removeCurrentTrackId();
+                this.removeCurrentTrackTime();
+                this.removeCurrentTrackTimeFromCookies();
             })
         },
 
+        async initCurrentTrackId(): Promise<string> {
+            return new Promise((resolve): void => {
+                let id = cookies.get('track.currentTrackId');
+
+                if (id) {
+                    this.setCurrentTrackId(id);
+                }
+
+                return resolve(id);
+            })
+        },
         setCurrentTrackId(id: string): string {
             this.currentTrackId = id;
+            this.saveCurrentTrackIdToCookies()
             return this.currentTrackId;
+        },
+        removeCurrentTrackId(): void {
+            this.setCurrentTrackId('');
+            this.removeCurrentTrackIdFromCookies();
         },
         setNextTrackId(): string {
             let ids = (this.sound_pack as SoundPackType).media.tracks.map((item: TrackType) => item.id);
@@ -77,6 +99,70 @@ export const soundPackStore = defineStore('soundPackStore', {
             }
 
             return this.setCurrentTrackId(ids[ids.indexOf(this.currentTrackId) + 1]);
+        },
+        saveCurrentTrackIdToCookies(): void {
+            cookies.set('track.currentTrackId', this.currentTrackId)
+        },
+        removeCurrentTrackIdFromCookies(): void {
+            cookies.remove('track.currentTrackId');
+        },
+
+        async initCurrentTrackTime(): Promise<number> {
+            return new Promise((res): void => {
+                let time = +cookies.get('track.time');
+
+                if (time) {
+                    this.setCurrentTrackTimeToCookies(time)
+                }
+
+                return res(time);
+            })
+        },
+        setCurrentTrackTime(time: number | string): void {
+            this.currentTrackTime = +time;
+        },
+        removeCurrentTrackTime(): void {
+            this.setCurrentTrackTime(0);
+        },
+        setCurrentTrackTimeToCookies(time: number | string): number {
+            this.currentTrackTime = +time;
+            return this.saveCurrentTrackTimeToCookies();
+        },
+        saveCurrentTrackTimeToCookies(): number {
+            cookies.set('track.time', this.currentTrackTime.toString())
+
+            return this.currentTrackTime;
+        },
+        removeCurrentTrackTimeFromCookies(): void {
+            cookies.remove('track.time');
+        },
+
+        async initCurrentAmbientIds(): Promise<Array<string>> {
+            return new Promise((res): void => {
+                let ids = cookies.get('ambient.currentAmbientIds');
+
+                if (ids) {
+                    this.setCurrentAmbientIds(JSON.parse(ids));
+                }
+
+                return res(ids ? JSON.parse(ids) : []);
+            })
+        },
+        setCurrentAmbientIds(ids: Array<string>): void {
+            this.currentAmbientIds = ids;
+        },
+        addToCurrentAmbientIds(id: string): void {
+            if (!this.currentAmbientIds.includes(id)) {
+                this.currentAmbientIds.push(id);
+                this.saveCurrentAmbientIdsToCookies();
+            }
+        },
+        removeFromCurrentAmbientIds(id: string): void {
+            this.currentAmbientIds = this.currentAmbientIds.filter((item: string) => item !== id);
+            this.saveCurrentAmbientIdsToCookies();
+        },
+        saveCurrentAmbientIdsToCookies(): void {
+            cookies.set('ambient.currentAmbientIds', JSON.stringify(this.currentAmbientIds))
         },
     },
 })

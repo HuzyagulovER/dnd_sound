@@ -10,26 +10,19 @@ export type SoundPackType = {
     },
 };
 
-export type TrackType = {
+export type BaseMedia = {
     id: string,
     title: string,
     description: string,
     file: string,
-};
+    image: string | null,
+}
 
-export type AmbientType = {
-    id: string,
-    title: string,
-    description: string,
-    file: string,
-};
+export type TrackType = {} & BaseMedia;
 
-export type OneShotType = {
-    id: string,
-    title: string,
-    description: string,
-    file: string,
-};
+export type AmbientType = {} & BaseMedia;
+
+export type OneShotType = {} & BaseMedia;
 
 export type SoundPacksType = Record<string, SoundPackType>;
 
@@ -38,6 +31,8 @@ export type SoundPackState = {
     sound_pack: SoundPackType | {},
     stopSignal: boolean,
     currentTrackId: string,
+    currentTrackTime: number,
+    currentAmbientIds: Array<string>,
 };
 
 export type MainState = {

@@ -1,60 +1,100 @@
 <template>
-  <div class="ambient" :title="title" :class="{active: isActive}" @click="handleClick">
-    <p class="ambient__title">{{ title }}</p>
+  <div class="ambient media-tile" :title="title" :class="{active: isActive}" @click="handleClick">
+    <p class="ambient__title media-tile__title" :class="{'without-image': isNull(image)}">{{ title }}</p>
+
+    <VolumeControlTile class="ambient__volume-control-tile"
+                       :storage-key="storageKey"
+                       :model-value="currentVolumePercent"
+                       @update:model-value="updateCurrentVolumeMultiplier"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import {computed, ComputedRef} from "vue";
+import {computed, ComputedRef, onBeforeUnmount, ref, Ref, watch} from "vue";
 import {useSound} from "@vueuse/sound";
+import {isNull} from "lodash";
+import {soundPackStore} from "@stores/sound_pack";
+import VolumeControlTile from "@components/sound_pack/VolumeControlTile.vue";
+import {useCookies} from "vue3-cookies";
 
-const {src, title} = defineProps<{
+const {id, src, title, image, groupVolume} = defineProps<{
+  id: string,
   src: string,
   title: string,
+  image: string | null,
+  groupVolume: number,
 }>();
 
-const {play, stop, isPlaying} = useSound(src, {
-  volume: 1,
-  loop: true,
+const {cookies} = useCookies();
+const storageKey = 'ambient.'+id+'.volume';
+const storeSoundPack = soundPackStore();
+const isActive: ComputedRef<boolean> = computed(() => isPlaying?.value);
+const currentVolumePercent: Ref<number> = ref(+cookies.get(storageKey) ?? 100);
+const summaryVolume: ComputedRef<number> = computed((): number => {
+  return groupVolume * +(currentVolumePercent.value / 100).toFixed(2);
 });
 
-const isActive: ComputedRef<boolean> = computed(() => isPlaying?.value);
+const {play, stop, isPlaying, sound} = useSound(src, {
+  volume: summaryVolume.value,
+  loop: true,
+  onload: () => {
+    if (storeSoundPack.currentAmbientIds.includes(id)) {
+      play();
+    }
+  }
+});
+
+watch(
+    summaryVolume,
+    () => {
+      sound?.value?.volume(summaryVolume.value);
+    }
+)
+
+function updateCurrentVolumeMultiplier(value: number): void {
+  currentVolumePercent.value = value;
+}
+
+function calcSummaryVolume(): number {
+  return groupVolume * currentVolumePercent.value;
+}
 
 function handleClick() {
-  isPlaying.value ? stop() : play();
+  isPlaying.value ? handleStop() : handlePlay();
 }
+
+function handlePlay() {
+  storeSoundPack.addToCurrentAmbientIds(id);
+  play();
+}
+
+function handleStop() {
+  storeSoundPack.removeFromCurrentAmbientIds(id)
+  stop();
+}
+
+onBeforeUnmount(async function () {
+  stop()
+})
 </script>
 
 <style lang="scss">
 @import "@scss/variables";
 
 .ambient {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  width: 14rem;
-  height: 14rem;
-  border: 1px solid $--c__grey;
-  border-radius: 1rem;
-  overflow: hidden;
-  transition: all .3s ease;
-  background-color: $--c__active;
-  padding: 1rem;
-  position: relative;
   cursor: pointer;
 
-  &__title {
-    color: $--c__white;
+  &__volume-control-tile {
+    visibility: hidden;
+    opacity: 0;
   }
 
-  &.active,
   &:hover {
-    background-color: $--c__light-active;
-  }
-
-  &.pointer {
-    cursor: pointer;
+    .ambient__volume-control-tile {
+      visibility: visible;
+      opacity: 1;
+    }
   }
 }
 </style>

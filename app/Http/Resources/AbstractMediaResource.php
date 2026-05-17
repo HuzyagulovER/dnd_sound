@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use App\Models\Track;
 use App\Services\Track\Media;
-use getID3;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;

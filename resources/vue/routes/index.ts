@@ -5,7 +5,7 @@ import SoundPackCreate from "@components/sound_packs/SoundPackCreate.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
-        path: '/',
+        path: '/sound-packs',
         name: 'SoundPacks',
         component: SoundPacks,
         meta: {
@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
         }
     },
     {
-        path: '/create',
+        path: '/sound-packs/create',
         name: 'SoundPackCreate',
         component: SoundPackCreate,
         meta: {
@@ -44,8 +44,12 @@ router.beforeEach(async (to) => {
         // const titleElement = <HTMLElement>document.querySelector('head title');
         // titleElement.innerText = to.meta?.title as string;
 
+        if (to.path === '/') {
+            return '/sound-packs';
+        }
+
         if (to.path === '/sign-in') {
-            return '/';
+            return '/sound-packs';
         } else {
             return true;
         }

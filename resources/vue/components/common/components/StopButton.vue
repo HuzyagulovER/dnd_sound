@@ -15,6 +15,7 @@
   height: 100%;
   fill: $--c__white;
   cursor: pointer;
+  border-radius: 50%;
 }
 </style>
 

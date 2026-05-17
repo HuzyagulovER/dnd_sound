@@ -2,6 +2,7 @@
 
 namespace App\Services\File;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 abstract class AbstractFile

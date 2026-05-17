@@ -1,27 +1,57 @@
 <template>
-  <div class="one-shot" :title="title" :class="{active: isActive}" @click="startSound">
-    <p class="one-shot__title">{{ title }}</p>
+  <div class="one-shot media-tile" :title="title" :class="{active: isActive}" @click="startSound">
+    <p class="one-shot__title media-tile__title" :class="{'without-image': isNull(image)}">{{ title }}</p>
+
+    <VolumeControlTile class="one-shot__volume-control-tile"
+                       :storage-key="storageKey"
+                       :model-value="currentVolumePercent"
+                       @update:model-value="updateCurrentVolumeMultiplier"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import {Ref, ref} from "vue";
+import {computed, ComputedRef, onBeforeUnmount, Ref, ref, watch} from "vue";
 import {useSound} from "@vueuse/sound";
+import {isNull} from "lodash";
+import VolumeControlTile from "@components/sound_pack/VolumeControlTile.vue";
+import {useCookies} from "vue3-cookies";
 
-const {src, title} = defineProps<{
+const {id, src, title, image, groupVolume} = defineProps<{
+  id: string,
   src: string,
   title: string,
+  image: string | null,
+  groupVolume: number,
 }>();
 
-const activeSoundIds = ref<Set<number>>(new Set()); // Используем Set для уникальности
+const {cookies} = useCookies();
+const storageKey = 'one_shot.'+id+'.volume';
+const isActive: Ref<boolean> = ref(false);
+const timeout: Ref<NodeJS.Timeout | null> = ref(null);
+const currentVolumePercent: Ref<number> = ref(+cookies.get(storageKey) ?? 100);
+const summaryVolume: ComputedRef<number> = computed((): number => {
+  return groupVolume * +(currentVolumePercent.value / 100).toFixed(2);
+});
 
-const {play, sound, duration} = useSound(src, {
-  volume: 1,
+const {play, sound, stop, duration} = useSound(src, {
+  volume: summaryVolume.value,
   interrupt: false,
 });
 
-const isActive: Ref<boolean> = ref(false);
-const timeout: Ref<NodeJS.Timeout | null> = ref(null);
+watch(
+    summaryVolume,
+    () => {
+      sound?.value?.volume(summaryVolume.value);
+    }
+)
+
+function updateCurrentVolumeMultiplier(value: number): void {
+  currentVolumePercent.value = value;
+}
+
+function calcSummaryVolume(): number {
+  return groupVolume * currentVolumePercent.value;
+}
 
 // Функция запуска звука (вызывается в разное время)
 const startSound = () => {
@@ -36,58 +66,29 @@ const startSound = () => {
     isActive.value = false
   }, duration.value);
 };
+
+onBeforeUnmount(async function(){
+  stop()
+})
 </script>
 
 <style lang="scss">
 @import "@scss/variables";
 
 .one-shot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  width: 14rem;
-  height: 14rem;
-  border: 1px solid $--c__grey;
-  border-radius: 1rem;
-  overflow: hidden;
-  transition: all .3s ease;
-  background-color: $--c__active;
-  padding: 1rem;
-  position: relative;
   cursor: pointer;
 
-  &__title {
-    color: $--c__white;
+  &__volume-control-tile {
+    visibility: hidden;
+    opacity: 0;
   }
 
-  .button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
-    &__container {
-      .play,
-      .stop,
-      .pause {
-        width: 4rem;
-        height: 4rem;
-      }
-    }
-  }
-
-  &.active,
   &:hover {
-    background-color: $--c__light-active;
-  }
-
-  &.pointer {
-    cursor: pointer;
+    .one-shot__volume-control-tile {
+      visibility: visible;
+      opacity: 1;
+    }
   }
 }
 </style>
